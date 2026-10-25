@@ -1,0 +1,38 @@
+
+name: Build Spider-Man Swing
+
+on:
+  push:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Baixar o codigo
+        uses: actions/checkout@v4
+
+      - name: Configurar Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Configurar Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.1.1'
+
+      - name: Compilar mod
+        run: gradle build
+
+      - name: Disponibilizar arquivo JAR
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: spiderman-swing-1.20.1
+          path: build/libs/*.jar
